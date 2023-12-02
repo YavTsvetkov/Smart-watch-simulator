@@ -1,25 +1,9 @@
 package com.src.smartwatchsimulator
-
-//import io.ktor.features.ContentNegotiation
-//import io.ktor.features.StatusPages
-//import io.ktor.html.respondHtml
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.http.content.resources
-//import io.ktor.http.content.static
-//import io.ktor.jackson.jackson
-//import io.ktor.request.receive
-//import io.ktor.routing.*
-//import io.ktor.server.engine.embeddedServer
-//import io.ktor.server.netty.Netty
-//import io.ktor.util.pipeline.PipelineContext
-//import kotlinx.
-//import kotlinx.html.h1
-//import kotlinx.html.p
-
+import android.os.Parcel
+import android.os.Parcelable
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.Application
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.html.respondHtml
@@ -36,15 +20,48 @@ import io.ktor.server.routing.routing
 import kotlinx.html.body
 import kotlinx.html.h1
 import kotlinx.html.p
+import kotlinx.serialization.Serializable
 import java.util.Random
 
+@Serializable
 data class SensorData(
     val distance: Double,
     val calories: Int,
     val heartRate: Int,
     val avgSpeed: Double,
     val timestamp: Long
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readDouble(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readDouble(),
+        parcel.readLong()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeDouble(distance)
+        parcel.writeInt(calories)
+        parcel.writeInt(heartRate)
+        parcel.writeDouble(avgSpeed)
+        parcel.writeLong(timestamp)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<SensorData> {
+        override fun createFromParcel(parcel: Parcel): SensorData {
+            return SensorData(parcel)
+        }
+
+        override fun newArray(size: Int): Array<SensorData?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 fun generateRandomSensorData(): SensorData {
     val random = Random()
@@ -59,9 +76,9 @@ fun generateRandomSensorData(): SensorData {
 
 fun Application.module() {
     install(ContentNegotiation) {
-        json()
+        jackson()
     }
-
+//
 //    install(StatusPages) {
 //        exception<Throwable> { cause ->
 //            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${cause.localizedMessage}")
@@ -72,6 +89,7 @@ fun Application.module() {
         route("/api") {
             get("/sensorData") {
                 val data = generateRandomSensorData()
+
                 call.respond(data)
             }
 
@@ -107,6 +125,30 @@ fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
 }
 
-class HTTPServer {
-
-}
+//package com.src.smartwatchsimulator
+//
+////import io.ktor.server.netty.Netty
+//import io.ktor.server.application.Application
+//import io.ktor.server.engine.embeddedServer
+//import io.ktor.server.netty.Netty
+//import io.ktor.server.response.respondText
+//import io.ktor.server.routing.get
+//import io.ktor.server.routing.routing
+//
+//fun Application.configureRouting() {
+//
+//    routing {
+//        get("/") {
+//            call.respondText("Hello World!")
+//        }
+//    }
+//}
+//
+//fun main() {
+//    embeddedServer(Netty, port = 3212, host = "0.0.0.0", module = Application::module)
+//        .start(wait = true)
+//}
+//
+//fun Application.module() {
+//    configureRouting()
+//}

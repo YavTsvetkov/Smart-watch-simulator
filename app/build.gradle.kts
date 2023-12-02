@@ -3,9 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-android {
+android {/**/
     namespace = "com.src.smartwatchsimulator"
     compileSdk = 34
+
+
+    packaging {
+        resources.excludes.add("META-INF/*")
+    }
 
     defaultConfig {
         applicationId = "com.src.smartwatchsimulator"
@@ -42,12 +47,13 @@ repositories {
 
 dependencies {
 
-    implementation ("io.ktor:ktor-server-netty:2.3.6")
-    implementation ("io.ktor:ktor-html-builder:2.3.6")
-    implementation("io.ktor:ktor-server-html-builder:2.3.6")
-    implementation("io.ktor:ktor-server-content-negotiation:2.3.6")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
-    implementation("io.ktor:ktor-server-status-pages:2.3.6")
+    implementation("io.ktor:ktor-server-netty:3.0.0-beta-1")
+//    implementation("io.ktor:ktor-html-builder:2.3.6")
+    implementation("io.ktor:ktor-server-html-builder:3.0.0-beta-1")
+    implementation("io.ktor:ktor-server-content-negotiation:3.0.0-beta-1")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0-beta-1")
+    implementation("io.ktor:ktor-server-status-pages:3.0.0-beta-1")
+    implementation("io.ktor:ktor-serialization-jackson:3.0.0-beta-1")
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
