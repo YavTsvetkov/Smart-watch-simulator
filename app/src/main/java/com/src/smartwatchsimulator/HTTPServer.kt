@@ -78,12 +78,6 @@ fun Application.module() {
     install(ContentNegotiation) {
         jackson()
     }
-//
-//    install(StatusPages) {
-//        exception<Throwable> { cause ->
-//            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${cause.localizedMessage}")
-//        }
-//    }
 
     routing {
         route("/api") {
@@ -122,33 +116,5 @@ fun Application.module() {
 }
 
 fun main() {
-    embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
+    embeddedServer(Netty, port = 9669, module = Application::module).start(wait = true)
 }
-
-//package com.src.smartwatchsimulator
-//
-////import io.ktor.server.netty.Netty
-//import io.ktor.server.application.Application
-//import io.ktor.server.engine.embeddedServer
-//import io.ktor.server.netty.Netty
-//import io.ktor.server.response.respondText
-//import io.ktor.server.routing.get
-//import io.ktor.server.routing.routing
-//
-//fun Application.configureRouting() {
-//
-//    routing {
-//        get("/") {
-//            call.respondText("Hello World!")
-//        }
-//    }
-//}
-//
-//fun main() {
-//    embeddedServer(Netty, port = 3212, host = "0.0.0.0", module = Application::module)
-//        .start(wait = true)
-//}
-//
-//fun Application.module() {
-//    configureRouting()
-//}
